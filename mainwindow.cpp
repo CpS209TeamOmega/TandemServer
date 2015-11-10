@@ -32,10 +32,10 @@ void MainWindow::clientConnect(){
         for(QObject *obj : server->children()) {
             QTcpSocket *tempsock = dynamic_cast<QTcpSocket*>(obj);
             if(tempsock && (tempsock != sock)) {
-                tempsock->write(QString("Connect\n").toLocal8Bit());
+                tempsock->write(QString("Connect 1\n").toLocal8Bit());
             }
         }
-        sock->write(QString("Connect\n").toLocal8Bit());
+        sock->write(QString("Connect 2\n").toLocal8Bit());
     }
 
 

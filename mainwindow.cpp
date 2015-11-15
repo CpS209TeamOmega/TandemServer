@@ -31,11 +31,16 @@ void MainWindow::clientConnect(){
     if(connectCount == 1) {
         for(QObject *obj : server->children()) {
             QTcpSocket *tempsock = dynamic_cast<QTcpSocket*>(obj);
-            if(tempsock && (tempsock != sock)) {
-                tempsock->write(QString("Connect 1\n").toLocal8Bit());
+            if(tempsock) {
+                if(tempsock != sock) {
+                    tempsock->write(QString("Connect 1\n").toLocal8Bit());
+                }
             }
         }
         sock->write(QString("Connect 2\n").toLocal8Bit());
+    } else if(connectCount > 1) {
+        sock->write(QString("LEAVE\n").toLocal8Bit());
+        return;
     }
 
 
@@ -61,4 +66,8 @@ void MainWindow::dataReceived(){
 
 void MainWindow::clientDisconnect(){
     ui->label_num->setText(QString::number(--connectCount));
+    for(QObject *obj : server->children()) {
+        QTcpSocket *sock = dynamic_cast<QTcpSocket*>(obj);
+        if(sock) sock->write(QString("Disconnect\n").toLocal8Bit());
+    }
 }
